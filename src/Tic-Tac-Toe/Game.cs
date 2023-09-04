@@ -1,29 +1,31 @@
-﻿namespace Tic_Tac_Toe;
+﻿using static System.String;
+
+namespace Tic_Tac_Toe;
 
 public class Game
 {
-    private static char[] Board = new char[9] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-    private static string FirstPlayerName;
-    private static string SecondPlayerName;
-    private static int NumberOfMoves;
+    private static char[]? _board = new char[9] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    private static string? _firstPlayerName;
+    private static string? _secondPlayerName;
+    private static int? _numberOfMoves;
 
     public static void NewGame()
     {
-        FirstPlayerName = PlayerName();
-        SecondPlayerName = PlayerName();
+        _firstPlayerName = PlayerName();
+        _secondPlayerName = PlayerName();
         InsertPlay();
-        File.SaveGameStatistics();
-    }
-
-    private static void SaveGameStatistics()
-    {
-        throw new NotImplementedException();
     }
 
     public static string PlayerName()
     {
-        Console.WriteLine("Digite o nome do jogador: ");
-        return Console.ReadLine()!;
+        string player;
+        do
+        {
+            Console.WriteLine("Digite o nome do jogador: ");
+            player = Console.ReadLine()!;
+        } while (IsNullOrWhiteSpace(player));
+
+        return player;
     }
 
     public static void PrintBoard()
@@ -43,16 +45,16 @@ public class Game
 
     public static void GenerateNewBoard(int position, char simbol)
     {
-        Board[position - 1] = simbol;
+        _board[position - 1] = simbol;
         Console.Clear();
         Console.WriteLine("     |     |     ");
-        Console.WriteLine($"  {Board[0]}  |  {Board[1]}  |  {Board[2]}");
+        Console.WriteLine($"  {_board[0]}  |  {_board[1]}  |  {_board[2]}");
         Console.WriteLine("_____|_____|_____");
         Console.WriteLine("     |     |     ");
-        Console.WriteLine($"  {Board[3]}  |  {Board[4]}  |  {Board[5]}");
+        Console.WriteLine($"  {_board[3]}  |  {_board[4]}  |  {_board[5]}");
         Console.WriteLine("_____|_____|_____");
         Console.WriteLine("     |     |     ");
-        Console.WriteLine($"  {Board[6]}  |  {Board[7]}  |  {Board[8]}");
+        Console.WriteLine($"  {_board[6]}  |  {_board[7]}  |  {_board[8]}");
         Console.WriteLine("     |     |     ");
         GameInstructions();
     }
@@ -69,12 +71,12 @@ public class Game
 
     public static void InsertPlay()
     {
-        Board = new char[9] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        _board = new char[9] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         Console.Clear();
 
         PrintBoard();
         var firstPlayerTurn = true;
-        NumberOfMoves = 0;
+        _numberOfMoves = 0;
         do
         {
             int position;
@@ -83,15 +85,15 @@ public class Game
                 do
                 {
                     Console.WriteLine("Jogada do primeiro player");
-                    Console.WriteLine($"Faça sua jogada: {FirstPlayerName} ");
+                    Console.WriteLine($"Faça sua jogada: {_firstPlayerName} ");
                     position = int.Parse(Console.ReadLine()!);
                 } while (position is < 1 or > 9);
 
-                if ((Board[position].CompareTo('X') != 0) && (Board[position].CompareTo('O') != 0))
+                if ((_board[position].CompareTo('X') != 0) || (_board[position].CompareTo('O') != 0))
                 {
                     GenerateNewBoard(position, 'X');
-                    NumberOfMoves++;
-                    Console.WriteLine(NumberOfMoves);
+                    _numberOfMoves++;
+                    Console.WriteLine(_numberOfMoves);
                     firstPlayerTurn = false;
                 }
             }
@@ -100,60 +102,60 @@ public class Game
                 do
                 {
                     Console.WriteLine("Jogada do primeiro player");
-                    Console.WriteLine($"Faça sua jogada: {SecondPlayerName} ");
+                    Console.WriteLine($"Faça sua jogada: {_secondPlayerName} ");
                     position = int.Parse(Console.ReadLine()!);
                 } while (position is < 1 or > 9);
 
-                if ((Board[position].CompareTo('X') != 0) && (Board[position].CompareTo('O') != 0))
+                if ((_board[position].CompareTo('X') != 0) || (_board[position].CompareTo('O') != 0))
                 {
                     GenerateNewBoard(position, 'O');
-                    NumberOfMoves++;
-                    Console.WriteLine(NumberOfMoves);
+                    _numberOfMoves++;
+                    Console.WriteLine(_numberOfMoves);
                     firstPlayerTurn = true;
                 }
             }
 
-            if (NumberOfMoves < 5)
+            if (_numberOfMoves < 5)
                 continue;
             var victory = CheckVictory();
             if (victory)
                 break;
-        } while (NumberOfMoves < 9);
+        } while (_numberOfMoves < 9);
     }
 
     public static bool CheckVictory()
     {
         var firstPlayerLineVictory =
-            (Board[0] == 'X' && Board[1] == 'X' && Board[2] == 'X') ||
-            (Board[3] == 'X' && Board[4] == 'X' && Board[5] == 'X') ||
-            (Board[6] == 'X' && Board[7] == 'X' && Board[8] == 'X');
+            _board != null && ((_board[0] == 'X' && _board[1] == 'X' && _board[2] == 'X') ||
+                               (_board[3] == 'X' && _board[4] == 'X' && _board[5] == 'X') ||
+                               (_board[6] == 'X' && _board[7] == 'X' && _board[8] == 'X'));
 
         var firstPlayerCollumnVictory =
-            (Board[0] == 'X' && Board[3] == 'X' && Board[6] == 'X') ||
-            (Board[1] == 'X' && Board[4] == 'X' && Board[7] == 'X') ||
-            (Board[2] == 'X' && Board[5] == 'X' && Board[8] == 'X');
+            _board != null && ((_board[0] == 'X' && _board[3] == 'X' && _board[6] == 'X') ||
+                               (_board[1] == 'X' && _board[4] == 'X' && _board[7] == 'X') ||
+                               (_board[2] == 'X' && _board[5] == 'X' && _board[8] == 'X'));
 
         var firstPlayerMainDiagonalVictory =
-            Board[0] == 'X' && Board[4] == 'X' && Board[8] == 'X';
+            _board != null && _board[0] == 'X' && _board[4] == 'X' && _board[8] == 'X';
 
         var firstPlayerSecondaryDiagonalVictory =
-            Board[2] == 'X' && Board[4] == 'X' && Board[6] == 'X';
+            _board != null && _board[2] == 'X' && _board[4] == 'X' && _board[6] == 'X';
 
         var secondPlayerLineVictory =
-            (Board[0] == 'O' && Board[1] == 'O' && Board[2] == 'O') ||
-            (Board[3] == 'O' && Board[4] == 'O' && Board[5] == 'O') ||
-            (Board[6] == 'O' && Board[7] == 'O' && Board[8] == 'O');
+            _board != null && ((_board[0] == 'O' && _board[1] == 'O' && _board[2] == 'O') ||
+                               (_board[3] == 'O' && _board[4] == 'O' && _board[5] == 'O') ||
+                               (_board[6] == 'O' && _board[7] == 'O' && _board[8] == 'O'));
 
         var secondPlayerCollumnVictory =
-            (Board[0] == 'O' && Board[3] == 'O' && Board[6] == 'O') ||
-            (Board[1] == 'O' && Board[4] == 'O' && Board[7] == 'O') ||
-            (Board[2] == 'O' && Board[5] == 'O' && Board[8] == 'O');
+            _board != null && ((_board[0] == 'O' && _board[3] == 'O' && _board[6] == 'O') ||
+                               (_board[1] == 'O' && _board[4] == 'O' && _board[7] == 'O') ||
+                               (_board[2] == 'O' && _board[5] == 'O' && _board[8] == 'O'));
 
         var secondPlayerMainDiagonalVictory =
-            Board[0] == 'O' && Board[4] == 'O' && Board[8] == 'O';
+            _board != null && _board[0] == 'O' && _board[4] == 'O' && _board[8] == 'O';
 
         var secondPlayerSecondaryDiagonalVictory =
-            Board[2] == 'O' && Board[4] == 'O' && Board[6] == 'O';
+            _board != null && _board[2] == 'O' && _board[4] == 'O' && _board[6] == 'O';
 
         if (
             firstPlayerLineVictory ||
@@ -162,7 +164,8 @@ public class Game
             firstPlayerSecondaryDiagonalVictory
             )
         {
-            Console.WriteLine($"Vitória do Jogador: {FirstPlayerName}");
+            Console.WriteLine($"Vitória do Jogador: {_firstPlayerName}");
+            File.SaveGameStatistics(_firstPlayerName);
             return true;
         }
         else if (
@@ -172,11 +175,12 @@ public class Game
             secondPlayerSecondaryDiagonalVictory
             )
         {
-            Console.WriteLine($"Vitória do Jogador: {SecondPlayerName}");
+            Console.WriteLine($"Vitória do Jogador: {_secondPlayerName}");
+            File.SaveGameStatistics(_secondPlayerName);
             return true;
         }
 
-        if (NumberOfMoves == 9)
+        if (_numberOfMoves == 9)
             Console.WriteLine("Não houve Jogador vencedor: ");
         return false;
     }
