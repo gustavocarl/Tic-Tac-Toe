@@ -1,4 +1,6 @@
-﻿int row, column, quantity = 0;
+﻿
+int row, column, quantity = 0;
+
 char[,] board = new char[3, 3]
 {
         { '1', '2', '3' },
@@ -83,8 +85,8 @@ void Game()
 
     do
     {
-        string playerTurn = (firstPlayerPlay) ? firstPlayerName : secondPlayerName;
-        Console.WriteLine($"Vez do jogador {playerTurn}");
+        string playerName = (firstPlayerPlay) ? firstPlayerName : secondPlayerName;
+        Console.WriteLine($"Vez do jogador {playerName}");
 
         do
         {
@@ -129,7 +131,7 @@ void Game()
         PrintBoard();
         if (quantity >= 5)
         {
-            ValidateVictory(playerTurn);
+            ValidateVictory(playerName);
         }
     } while (quantity < 9);
 }
@@ -171,5 +173,12 @@ void ValidateVictory(string playerName)
         Console.WriteLine($"Vitória do jogador: {playerName}");
         Console.WriteLine($"Pressione ENTER para continuar...");
         Console.ReadLine();
+    }
+    else if(quantity >= 9)
+    {
+        Console.WriteLine($"Não houve vencedor nessa partida!");
+        Console.WriteLine($"Pressione ENTER para continuar...");
+        Console.ReadLine();
+
     }
 }
